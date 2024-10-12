@@ -48,6 +48,7 @@ public class Main extends Application {
     Tekst Tekstskrevet;
 
     ArrayList<Figur> figurArrayList = new ArrayList<>();
+    ArrayList<Figur> tempArrayList = new ArrayList<>();
 
     @Override
     public void start(Stage primaryStage) {
@@ -119,13 +120,49 @@ public class Main extends Application {
         Button redovalg = new Button();
         redovalg.setGraphic(redoview);
 
+        undovalg.setOnAction(e ->{
+            undomethod();
+        });
+
+        redovalg.setOnAction(e -> {
+            redomethod();
+        });
+
+        Button savefil = new Button("Lagre fil");
+
+        savefil.setOnAction(e -> {
+
+        });
+
+
         hbox.setSpacing(10);
-        hbox.setPadding(new Insets(50,0,0,20));
+        hbox.setPadding(new Insets(50,0,40,20));
         hbox.getChildren().addAll(undovalg,redovalg);
-        vBox.getChildren().addAll(rektangelvalg, sirkelvalg, linjevalg, textvalg, strekfargelabel, strekfarge, fillFargelabel, fillfarge,strekbredde,strekbreddeinput,hbox);
+        vBox.getChildren().addAll(rektangelvalg, sirkelvalg, linjevalg, textvalg, strekfargelabel, strekfarge, fillFargelabel, fillfarge,strekbredde,strekbreddeinput,hbox, savefil);
         stilUI(vBox);
         return vBox;
     }
+
+    private void undomethod() {
+        if (!figurArrayList.isEmpty()) {
+            Figur sistefigur = figurArrayList.remove(figurArrayList.size() - 1);
+            tempArrayList.add(sistefigur);
+            tegnepane.getChildren().remove(sistefigur.getShape());
+        }else if (figurArrayList.isEmpty()){
+           return;
+        }
+    }
+    private void redomethod() {
+        if (!tempArrayList.isEmpty()) {
+            Figur sistefigur = tempArrayList.remove(tempArrayList.size() - 1);
+            figurArrayList.add(sistefigur);
+            if (sistefigur.getShape() != null) {
+                tegnepane.getChildren().add(sistefigur.getShape());
+            }
+        }
+    }
+
+
     private boolean breddegyldig() {
         try {
             double inputStrekbredde = Double.parseDouble(strekbreddeinput.getText());
@@ -165,17 +202,19 @@ public class Main extends Application {
                         figur = new Rektangel(klikkmusx, klikkmusy, 0, 0, valgtstrekfarge, valgtfillfarge, inputStrekbredde);
                         tegnepane.getChildren().add(figur.getShape());
                         figur.musklikk(klikkmusx, klikkmusy);
-
+                        figurArrayList.add(figur);
                         break;
                     case "Sirkel":
                         figur = new Sirkel(klikkmusx, klikkmusy, 0, valgtstrekfarge, valgtfillfarge, inputStrekbredde);
                         tegnepane.getChildren().add(figur.getShape());
                         figur.musklikk(klikkmusx, klikkmusy);
+                        figurArrayList.add(figur);
                         break;
                     case "Linje":
                         figur = new Linje(klikkmusx, klikkmusy, klikkmusx, klikkmusy, valgtstrekfarge, inputStrekbredde);
                         tegnepane.getChildren().add(figur.getShape());
                         figur.musklikk(klikkmusx, klikkmusy);
+                        figurArrayList.add(figur);
                         break;
                     case "Text":
                         Tekstskrevet = new Tekst(inputfratext, klikkmusx, klikkmusy, valgtstrekfarge,inputStrekbredde);
@@ -204,6 +243,7 @@ public class Main extends Application {
             }
         });
     }
+
 
 
 

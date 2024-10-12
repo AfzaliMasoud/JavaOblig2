@@ -3,37 +3,51 @@ package com.example.javaoblig2;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 
-public class Sirkel extends Figur{
+public class Sirkel extends Figur {
 
     private javafx.scene.shape.Circle sirkel;
     double musklikkx;
     double musklikky;
 
+    private double startX;
+    private double startY;
+    private Color strokeColor;
+    private Color fillColor;
+    private double strokeWidth;
+    double radius;
 
-    public Sirkel(double startX, double startY,double radius, Color Strokefarge, Color Fillfarge, double Strokebredde) {
+    public Sirkel(double startX, double startY, double radius, Color strokeColor, Color fillColor, double strokeWidth) {
+        this.startX = startX;
+        this.startY = startY;
+        this.strokeColor = strokeColor;
+        this.fillColor = fillColor;
+        this.strokeWidth = strokeWidth;
+
         sirkel = new javafx.scene.shape.Circle(startX, startY, radius);
-        sirkel.setStroke(Strokefarge);
-        sirkel.setFill(Fillfarge);
-        sirkel.setStrokeWidth(Strokebredde);
+        sirkel.setStroke(strokeColor);
+        sirkel.setFill(fillColor);
+        sirkel.setStrokeWidth(strokeWidth);
     }
-    public void setRadius(double x){
-        sirkel.setRadius(x);
+
+    public void setRadius(double radius) {
+        sirkel.setRadius(radius);
     }
 
     public void setCenter(double x, double y) {
         sirkel.setCenterX(x);
         sirkel.setCenterY(y);
     }
+
     @Override
     public Shape getShape() {
         return sirkel;
     }
+
     @Override
     public void musklikk(double x, double y) {
         musklikkx = x;
         musklikky = y;
-        setCenter(x,y);
-
+        setCenter(x, y);
     }
 
     @Override
@@ -42,6 +56,13 @@ public class Sirkel extends Figur{
         setRadius(radius);
     }
 
-
-
+    @Override
+    public String toString() {
+        return "Sirkel: [StartX: " + startX +
+                ", StartY: " + startY +
+                ", Radius: " + radius +
+                ", Stroke Color: " + strokeColor +
+                ", Fill Color: " + fillColor +
+                ", Stroke Width: " + strokeWidth + "]";
+    }
 }

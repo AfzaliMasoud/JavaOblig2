@@ -9,14 +9,24 @@ public class Rektangel extends Figur {
     private Rectangle rektangel;
     private double startX;
     private double startY;
+    private double bredde;
+    private double høyde;
+    private Color strokeColor;
+    private Color fillColor;
+    private double strokeWidth;
 
-    public Rektangel(double x, double y, double bredde, double høyde, Color Strokefarge, Color Fillfarge, double Strokebredde) {
-        rektangel = new Rectangle(x, y, bredde, høyde);
-        rektangel.setStroke(Strokefarge);
-        rektangel.setFill(Fillfarge);
-        rektangel.setStrokeWidth(Strokebredde);
+    public Rektangel(double x, double y, double bredde, double høyde, Color strokeColor, Color fillColor, double strokeWidth) {
         this.startX = x;
         this.startY = y;
+        this.bredde = bredde;
+        this.høyde = høyde;
+        this.strokeColor = strokeColor;
+        this.fillColor = fillColor;
+        this.strokeWidth = strokeWidth;
+        rektangel = new Rectangle(x, y, bredde, høyde);
+        rektangel.setStroke(strokeColor);
+        rektangel.setFill(fillColor);
+        rektangel.setStrokeWidth(strokeWidth);
     }
 
     @Override
@@ -49,4 +59,14 @@ public class Rektangel extends Figur {
         rektangel.setHeight(høyde);
     }
 
+    @Override
+    public String toString() {
+        return "Rektangel: [StartX: " + startX +
+                ", StartY: " + startY +
+                ", Bredde: " + bredde +
+                ", Høyde: " + høyde +
+                ", Stroke Color: " + strokeColor +
+                ", Fill Color: " + fillColor +
+                ", Stroke Width: " + strokeWidth + "]";
+    }
 }
