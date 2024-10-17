@@ -32,10 +32,17 @@ public class Sirkel extends Figur {
     public void setRadius(double radius) {
         sirkel.setRadius(radius);
     }
+    public double getRadius() {
+        return sirkel.getRadius();
+    }
 
     public void setCenter(double x, double y) {
         sirkel.setCenterX(x);
         sirkel.setCenterY(y);
+    }
+    @Override
+    public String getDetails() {
+        return "Sirkel: Radius = " + getRadius();
     }
 
     @Override
@@ -54,6 +61,10 @@ public class Sirkel extends Figur {
     public void musdra(double x, double y) {
         double radius = Math.hypot(x - musklikkx, y - musklikky);
         setRadius(radius);
+    }
+    @Override
+    public void move(double x, double y) {
+        setCenter(sirkel.getCenterX() + x, sirkel.getCenterY() + y);
     }
 
     @Override

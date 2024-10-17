@@ -32,6 +32,7 @@ public class Main extends Application {
     VBox vbox;
     BorderPane hovedpane;
     HBox hbox;
+    HBox hbox2;
 
     Figur figur;
     String ValgtFigur;
@@ -58,14 +59,20 @@ public class Main extends Application {
         hovedpane.setCenter(tegnepane);
         hovedpane.setLeft(vbox);
 
+
         klikk(tegnepane);
         dra(tegnepane);
+
+
+
+
         Scene scene = new Scene(hovedpane, 1500, 700);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
     private VBox Valgpane() {
         hbox = new HBox();
+        hbox2 = new HBox();
         VBox vBox = new VBox();
 
         rektangelbilde = loadImage("Images/Rektangel.png");
@@ -128,19 +135,49 @@ public class Main extends Application {
             redomethod();
         });
 
+        Button Nyfil = new Button("Ny fil");
+
+        Nyfil.setOnAction(e-> {
+           nyFil();
+        });
+
         Button savefil = new Button("Lagre fil");
 
         savefil.setOnAction(e -> {
-
+            nyFil();
         });
 
 
         hbox.setSpacing(10);
         hbox.setPadding(new Insets(50,0,40,20));
         hbox.getChildren().addAll(undovalg,redovalg);
-        vBox.getChildren().addAll(rektangelvalg, sirkelvalg, linjevalg, textvalg, strekfargelabel, strekfarge, fillFargelabel, fillfarge,strekbredde,strekbreddeinput,hbox, savefil);
+
+        hbox2.setSpacing(10);
+        hbox2.setPadding(new Insets(0,0,0,22));
+        hbox2.getChildren().addAll(Nyfil,savefil);
+
+        vBox.getChildren().addAll(rektangelvalg, sirkelvalg, linjevalg, textvalg, strekfargelabel, strekfarge, fillFargelabel, fillfarge,strekbredde,strekbreddeinput,hbox, hbox2);
         stilUI(vBox);
         return vBox;
+    }
+
+    private void nyFil(){
+        int sikker = JOptionPane.showConfirmDialog(
+                null,
+                "Er du sikker at du vil lage en ny fil? Denne filen blir ikke lagret!",
+                "Bekreftelse",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if(sikker == 0){
+            for (Figur figur : figurArrayList){
+                tegnepane.getChildren().remove(figur.getShape());
+
+            }
+            figurArrayList.clear();
+        }else{
+            return;
+        }
     }
 
     private void undomethod() {
@@ -243,7 +280,6 @@ public class Main extends Application {
             }
         });
     }
-
 
 
 

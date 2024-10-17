@@ -28,6 +28,13 @@ public class Rektangel extends Figur {
         rektangel.setFill(fillColor);
         rektangel.setStrokeWidth(strokeWidth);
     }
+    public double getWidth() {
+        return rektangel.getWidth();
+    }
+
+    public double getHeight() {
+        return rektangel.getHeight();
+    }
 
     @Override
     public Shape getShape() {
@@ -54,11 +61,21 @@ public class Rektangel extends Figur {
         rektangel.setY(y);
     }
 
+
     public void setSize(double bredde, double høyde) {
         rektangel.setWidth(bredde);
         rektangel.setHeight(høyde);
     }
+    @Override
+    public void move(double x, double y) {
+        rektangel.setX(rektangel.getX() + x);
+        rektangel.setY(rektangel.getY() + y);
+    }
 
+    @Override
+    public String getDetails() {
+        return "Rektangel: Bredde = " + getWidth() + ", Høyde = " + getHeight();
+    }
     @Override
     public String toString() {
         return "Rektangel: [StartX: " + startX +
