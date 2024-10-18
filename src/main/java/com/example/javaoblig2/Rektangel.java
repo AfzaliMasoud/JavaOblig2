@@ -66,11 +66,14 @@ public class Rektangel extends Figur {
         rektangel.setWidth(bredde);
         rektangel.setHeight(høyde);
     }
+
     @Override
-    public void move(double x, double y) {
-        rektangel.setX(rektangel.getX() + x);
-        rektangel.setY(rektangel.getY() + y);
+    public void move(double initialx, double initialy) {
+        rektangel.setX(initialx);
+        rektangel.setY(initialy);
     }
+
+
 
     @Override
     public String getDetails() {

@@ -33,6 +33,7 @@ public class Main extends Application {
     BorderPane hovedpane;
     HBox hbox;
     HBox hbox2;
+    HBox hbox3;
 
     Figur figur;
     String ValgtFigur;
@@ -45,8 +46,15 @@ public class Main extends Application {
     double klikkmusx;
     double klikkmusy;
 
+    double mousex;
+    double mousey;
+
+    boolean tegn = true;
+
     String inputfratext;
     Tekst Tekstskrevet;
+    Button flyttebutton;
+
 
     ArrayList<Figur> figurArrayList = new ArrayList<>();
     ArrayList<Figur> tempArrayList = new ArrayList<>();
@@ -62,9 +70,7 @@ public class Main extends Application {
 
         klikk(tegnepane);
         dra(tegnepane);
-
-
-
+        flyttklikk(tegnepane);
 
         Scene scene = new Scene(hovedpane, 1500, 700);
         primaryStage.setScene(scene);
@@ -73,6 +79,7 @@ public class Main extends Application {
     private VBox Valgpane() {
         hbox = new HBox();
         hbox2 = new HBox();
+        hbox3 = new HBox();
         VBox vBox = new VBox();
 
         rektangelbilde = loadImage("Images/Rektangel.png");
@@ -81,6 +88,7 @@ public class Main extends Application {
         rektangelvalg.setGraphic(rektangelview);
         rektangelvalg.setOnAction(e -> {
             ValgtFigur = "Rektangel";
+            tegn = true;
         });
 
         sirkelbilde = loadImage("Images/Sirkel.png");
@@ -89,6 +97,7 @@ public class Main extends Application {
         sirkelvalg.setGraphic(sirkelview);
         sirkelvalg.setOnAction(e -> {
             ValgtFigur = "Sirkel";
+            tegn = true;
         });
 
         linjebilde = loadImage("Images/Linje.png");
@@ -97,6 +106,7 @@ public class Main extends Application {
         linjevalg.setGraphic(linjeview);
         linjevalg.setOnAction(e -> {
             ValgtFigur = "Linje";
+            tegn = true;
         });
 
         textbilde = loadImage("Images/Text.png");
@@ -106,6 +116,7 @@ public class Main extends Application {
         textvalg.setOnAction(e -> {
             inputfratext = JOptionPane.showInputDialog("Hva vil du skrive?");
             ValgtFigur = "Text";
+            tegn = true;
         });
 
         Label strekfargelabel = new Label("Velg Strek Farge");
@@ -127,6 +138,9 @@ public class Main extends Application {
         Button redovalg = new Button();
         redovalg.setGraphic(redoview);
 
+        flyttebutton = new Button("FLYTT");
+
+
         undovalg.setOnAction(e ->{
             undomethod();
         });
@@ -147,6 +161,10 @@ public class Main extends Application {
             nyFil();
         });
 
+        flyttebutton.setOnAction(e ->{
+            tegn = false;
+        });
+
 
         hbox.setSpacing(10);
         hbox.setPadding(new Insets(50,0,40,20));
@@ -156,7 +174,10 @@ public class Main extends Application {
         hbox2.setPadding(new Insets(0,0,0,22));
         hbox2.getChildren().addAll(Nyfil,savefil);
 
-        vBox.getChildren().addAll(rektangelvalg, sirkelvalg, linjevalg, textvalg, strekfargelabel, strekfarge, fillFargelabel, fillfarge,strekbredde,strekbreddeinput,hbox, hbox2);
+        hbox3.setSpacing(30);
+        hbox3.getChildren().addAll(sirkelvalg, flyttebutton);
+
+        vBox.getChildren().addAll(rektangelvalg,hbox3, linjevalg, textvalg,strekfargelabel, strekfarge, fillFargelabel, fillfarge,strekbredde,strekbreddeinput,hbox, hbox2);
         stilUI(vBox);
         return vBox;
     }
@@ -200,6 +221,8 @@ public class Main extends Application {
     }
 
 
+
+
     private boolean breddegyldig() {
         try {
             double inputStrekbredde = Double.parseDouble(strekbreddeinput.getText());
@@ -217,6 +240,11 @@ public class Main extends Application {
 
     private void klikk(Pane tegnepane) {
         tegnepane.setOnMousePressed(e -> {
+
+            if (!tegn){
+                return;
+            }
+
             if (e.getButton() == MouseButton.PRIMARY) {
 
                 if (ValgtFigur == null) {
@@ -268,6 +296,9 @@ public class Main extends Application {
 
     private void dra(Pane tegnepane) {
         tegnepane.setOnMouseDragged(e -> {
+            if (!tegn){
+                return;
+            }
             if (e.getButton() == MouseButton.PRIMARY) {
                 double musx = e.getX();
                 double musy = e.getY();
@@ -281,6 +312,28 @@ public class Main extends Application {
         });
     }
 
+
+    private void flyttklikk(Pane tegnpane){
+        tegnpane.setOnMouseClicked(e->{
+            if (!tegn) {
+
+                mousex = e.getX();
+                mousey = e.getY();
+
+                figur = null;
+
+                for (int i = figurArrayList.size() - 1; i >= 0; i--) {
+                    Figur figurloop = figurArrayList.get(i);
+
+                    if (figurloop.getShape().contains(mousex, mousey)) {
+                        figur = figurloop;
+                        System.out.println(" "+figur.getDetails());
+                        break;
+                    }
+                }
+            }
+        });
+    }
 
 
 
