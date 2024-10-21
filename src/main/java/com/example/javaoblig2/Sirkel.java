@@ -74,6 +74,11 @@ public class Sirkel extends Figur {
         sirkel.setFill(nyfillfarge);
     }
 
+    @Override
+    public void setStroke(Color nyfillfarge){
+        sirkel.setStroke(nyfillfarge);
+    }
+
 
 
     @Override

@@ -41,7 +41,8 @@ public class Main extends Application {
     HBox hboxedit1;
     HBox hboxedit2;
     HBox hboxedit3;
-
+    Color nyStroke;
+    Color nyFill;
 
     Label Figurvalgtedit = new Label("Valgt Figur : ");
     TextField figurvalgtedittext = new TextField();
@@ -85,6 +86,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        figurvalgtedittext.setEditable(false);
+
         hovedpane = new BorderPane();
         vboxedit = editpane();
         vbox = Valgpane();
@@ -378,6 +381,7 @@ public class Main extends Application {
         tegnpane.setOnMouseClicked(e->{
             if (!tegn) {
 
+
                 mousex = e.getX();
                 mousey = e.getY();
 
@@ -404,10 +408,26 @@ public class Main extends Application {
                 }
             }
         });
+
+        fargegitt.setOnAction(event -> {
+            if (figur != null) {
+                Color fargevalg = fargegitt.getValue();
+                figur.setStroke(fargevalg);
+            }
+        });
+
+        fargeFill.setOnAction(event -> {
+            if (figur != null) {
+                Color fargevalg = fargeFill.getValue();
+                figur.setFill(fargevalg);
+            }
+        });
+
         buttonslett.setOnAction(e2 -> {
             tegnepane.getChildren().remove(figur.getShape());
             figurArrayList.remove(figur);
         });
+
     }
 
 
@@ -418,7 +438,6 @@ public class Main extends Application {
         hboxedit1 = new HBox();
         hboxedit2 = new HBox();
         hboxedit3 = new HBox();
-
 
 
         hboxedit1.getChildren().addAll(Figurvalgtedit,figurvalgtedittext);

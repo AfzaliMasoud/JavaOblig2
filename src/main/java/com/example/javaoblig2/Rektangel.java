@@ -72,6 +72,11 @@ public class Rektangel extends Figur {
     public void setFill(Color nyfillfarge){
         rektangel.setFill(nyfillfarge);
     }
+    @Override
+    public void setStroke(Color nyfillfarge){
+        rektangel.setStroke(nyfillfarge);
+    }
+
 
 
     @Override

@@ -69,6 +69,10 @@ public class Linje extends Figur {
     public void setFill(Color nyfillfarge){
         return;
     }
+    @Override
+    public void setStroke(Color nyfillfarge){
+        linje.setStroke(nyfillfarge);
+    }
 
     @Override
     public String toString() {

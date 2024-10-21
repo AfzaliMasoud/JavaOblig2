@@ -11,6 +11,7 @@ public abstract class Figur {
     public abstract String getDetails();
     public abstract boolean checkarea();
     public abstract void setFill(Color nyfillfarge);
+    public abstract void setStroke(Color nystrokefarge);
 
 
 }
