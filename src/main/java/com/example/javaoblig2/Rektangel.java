@@ -15,6 +15,7 @@ public class Rektangel extends Figur {
     private Color fillColor;
     private double strokeWidth;
 
+
     public Rektangel(double x, double y, double bredde, double høyde, Color strokeColor, Color fillColor, double strokeWidth) {
         this.startX = x;
         this.startY = y;
@@ -68,17 +69,27 @@ public class Rektangel extends Figur {
     }
 
     @Override
-    public void move(double initialx, double initialy) {
-        rektangel.setX(initialx);
-        rektangel.setY(initialy);
+    public void setFill(Color nyfillfarge){
+        rektangel.setFill(nyfillfarge);
+    }
+
+
+    @Override
+    public boolean checkarea() {
+        double bredde = rektangel.getWidth();
+        double høyde = rektangel.getHeight();
+        double area = bredde * høyde;
+
+        return area <= 10;
     }
 
 
 
     @Override
     public String getDetails() {
-        return "Rektangel: Bredde = " + getWidth() + ", Høyde = " + getHeight();
+        return "Rektangel";
     }
+
     @Override
     public String toString() {
         return "Rektangel: [StartX: " + startX +

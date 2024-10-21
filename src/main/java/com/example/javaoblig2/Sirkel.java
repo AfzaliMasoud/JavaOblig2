@@ -42,7 +42,7 @@ public class Sirkel extends Figur {
     }
     @Override
     public String getDetails() {
-        return "Sirkel: Radius = " + getRadius();
+        return "Sirkel";
     }
 
     @Override
@@ -62,10 +62,19 @@ public class Sirkel extends Figur {
         double radius = Math.hypot(x - musklikkx, y - musklikky);
         setRadius(radius);
     }
+
     @Override
-    public void move(double x, double y) {
-        setCenter(sirkel.getCenterX() + x, sirkel.getCenterY() + y);
+    public boolean checkarea() {
+        double radius = sirkel.getRadius();
+        double area = Math.PI * radius * radius;
+        return area <= 10;
     }
+    @Override
+    public void setFill(Color nyfillfarge){
+        sirkel.setFill(nyfillfarge);
+    }
+
+
 
     @Override
     public String toString() {

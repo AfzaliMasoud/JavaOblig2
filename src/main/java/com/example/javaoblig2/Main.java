@@ -12,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 
@@ -30,18 +31,38 @@ public class Main extends Application {
 
     Pane tegnepane;
     VBox vbox;
+    VBox vboxedit;
+    VBox vboxeditvar;
     BorderPane hovedpane;
     HBox hbox;
     HBox hbox2;
     HBox hbox3;
+    HBox hbox4;
+    HBox hboxedit1;
+    HBox hboxedit2;
+    HBox hboxedit3;
+
+
+    Label Figurvalgtedit = new Label("Valgt Figur : ");
+    TextField figurvalgtedittext = new TextField();
+
+    Label strekfargeny = new Label("Strek Farge : ");
+    ColorPicker fargegitt = new ColorPicker();
+
+    Label fillfargeny = new Label("Fill Farge : ");
+    ColorPicker fargeFill = new ColorPicker();
+
+    Button buttonslett = new Button("Slett Figur");
 
     Figur figur;
-    String ValgtFigur;
+    String ValgtFigur ="Rektangel";
 
     ColorPicker strekfarge;
     ColorPicker fillfarge;
 
     TextField strekbreddeinput;
+
+    Label fillFargelabel;
 
     double klikkmusx;
     double klikkmusy;
@@ -50,27 +71,34 @@ public class Main extends Application {
     double mousey;
 
     boolean tegn = true;
+    boolean isValid;
 
     String inputfratext;
     Tekst Tekstskrevet;
     Button flyttebutton;
+    Button tegnbutton;
 
 
     ArrayList<Figur> figurArrayList = new ArrayList<>();
     ArrayList<Figur> tempArrayList = new ArrayList<>();
 
+
     @Override
     public void start(Stage primaryStage) {
         hovedpane = new BorderPane();
+        vboxedit = editpane();
         vbox = Valgpane();
         tegnepane = new Pane();
         hovedpane.setCenter(tegnepane);
         hovedpane.setLeft(vbox);
+        hovedpane.setRight(vboxedit);
 
 
         klikk(tegnepane);
         dra(tegnepane);
+        lagrerelease(tegnepane);
         flyttklikk(tegnepane);
+
 
         Scene scene = new Scene(hovedpane, 1500, 700);
         primaryStage.setScene(scene);
@@ -80,6 +108,7 @@ public class Main extends Application {
         hbox = new HBox();
         hbox2 = new HBox();
         hbox3 = new HBox();
+        hbox4 = new HBox();
         VBox vBox = new VBox();
 
         rektangelbilde = loadImage("Images/Rektangel.png");
@@ -89,6 +118,9 @@ public class Main extends Application {
         rektangelvalg.setOnAction(e -> {
             ValgtFigur = "Rektangel";
             tegn = true;
+            fillFargelabel.setVisible(true);
+            fillfarge.setVisible(true);
+            vboxeditvar.setVisible(false);
         });
 
         sirkelbilde = loadImage("Images/Sirkel.png");
@@ -98,6 +130,10 @@ public class Main extends Application {
         sirkelvalg.setOnAction(e -> {
             ValgtFigur = "Sirkel";
             tegn = true;
+            fillFargelabel.setVisible(true);
+            fillfarge.setVisible(true);
+            vboxeditvar.setVisible(false);
+
         });
 
         linjebilde = loadImage("Images/Linje.png");
@@ -107,6 +143,9 @@ public class Main extends Application {
         linjevalg.setOnAction(e -> {
             ValgtFigur = "Linje";
             tegn = true;
+            fillFargelabel.setVisible(false);
+            fillfarge.setVisible(false);
+            vboxeditvar.setVisible(false);
         });
 
         textbilde = loadImage("Images/Text.png");
@@ -117,16 +156,21 @@ public class Main extends Application {
             inputfratext = JOptionPane.showInputDialog("Hva vil du skrive?");
             ValgtFigur = "Text";
             tegn = true;
+            fillFargelabel.setVisible(false);
+            fillfarge.setVisible(false );
+            vboxeditvar.setVisible(false);
         });
 
         Label strekfargelabel = new Label("Velg Strek Farge");
         strekfarge = new ColorPicker();
+        strekfarge.setValue(Color.BLACK);
 
-        Label fillFargelabel = new Label("Velg Fyll Farge");
+        fillFargelabel = new Label("Velg Fyll Farge");
         fillfarge = new ColorPicker();
+        fillfarge.setValue(Color.RED);
 
         Label strekbredde = new Label("Strek Bredde (Pixel)");
-        strekbreddeinput = new TextField("1");
+        strekbreddeinput = new TextField("5");
 
         undo = loadImage("Images/UNDO.png");
         ImageView undoview = new ImageView(undo);
@@ -138,8 +182,8 @@ public class Main extends Application {
         Button redovalg = new Button();
         redovalg.setGraphic(redoview);
 
-        flyttebutton = new Button("FLYTT");
-
+        flyttebutton = new Button("Edit");
+        tegnbutton = new Button("Tegn");
 
         undovalg.setOnAction(e ->{
             undomethod();
@@ -164,7 +208,10 @@ public class Main extends Application {
         flyttebutton.setOnAction(e ->{
             tegn = false;
         });
-
+        tegnbutton.setOnAction(e->{
+            tegn = true;
+            vboxeditvar.setVisible(false);
+        });
 
         hbox.setSpacing(10);
         hbox.setPadding(new Insets(50,0,40,20));
@@ -177,10 +224,15 @@ public class Main extends Application {
         hbox3.setSpacing(30);
         hbox3.getChildren().addAll(sirkelvalg, flyttebutton);
 
-        vBox.getChildren().addAll(rektangelvalg,hbox3, linjevalg, textvalg,strekfargelabel, strekfarge, fillFargelabel, fillfarge,strekbredde,strekbreddeinput,hbox, hbox2);
+        hbox4.setSpacing(30);
+        hbox4.getChildren().addAll(rektangelvalg,tegnbutton);
+
+        vBox.getChildren().addAll(hbox4,hbox3, linjevalg, textvalg,strekfargelabel, strekfarge, fillFargelabel, fillfarge,strekbredde,strekbreddeinput,hbox, hbox2);
         stilUI(vBox);
         return vBox;
     }
+
+
 
     private void nyFil(){
         int sikker = JOptionPane.showConfirmDialog(
@@ -198,6 +250,7 @@ public class Main extends Application {
             figurArrayList.clear();
         }else{
             return;
+
         }
     }
 
@@ -221,8 +274,6 @@ public class Main extends Application {
     }
 
 
-
-
     private boolean breddegyldig() {
         try {
             double inputStrekbredde = Double.parseDouble(strekbreddeinput.getText());
@@ -241,53 +292,50 @@ public class Main extends Application {
     private void klikk(Pane tegnepane) {
         tegnepane.setOnMousePressed(e -> {
 
-            if (!tegn){
-                return;
-            }
-
-            if (e.getButton() == MouseButton.PRIMARY) {
-
-                if (ValgtFigur == null) {
-                    JOptionPane.showMessageDialog(null, "Du må velge en figur først!");
-                    return;
-                }
-
-                if (!breddegyldig()) {
-                    return;
-                }
-
-                double inputStrekbredde = Double.parseDouble(strekbreddeinput.getText());
-                klikkmusx = e.getX();
-                klikkmusy = e.getY();
-                Color valgtstrekfarge = strekfarge.getValue();
-                Color valgtfillfarge = fillfarge.getValue();
-
-                switch (ValgtFigur) {
-                    case "Rektangel":
-                        figur = new Rektangel(klikkmusx, klikkmusy, 0, 0, valgtstrekfarge, valgtfillfarge, inputStrekbredde);
-                        tegnepane.getChildren().add(figur.getShape());
-                        figur.musklikk(klikkmusx, klikkmusy);
-                        figurArrayList.add(figur);
-                        break;
-                    case "Sirkel":
-                        figur = new Sirkel(klikkmusx, klikkmusy, 0, valgtstrekfarge, valgtfillfarge, inputStrekbredde);
-                        tegnepane.getChildren().add(figur.getShape());
-                        figur.musklikk(klikkmusx, klikkmusy);
-                        figurArrayList.add(figur);
-                        break;
-                    case "Linje":
-                        figur = new Linje(klikkmusx, klikkmusy, klikkmusx, klikkmusy, valgtstrekfarge, inputStrekbredde);
-                        tegnepane.getChildren().add(figur.getShape());
-                        figur.musklikk(klikkmusx, klikkmusy);
-                        figurArrayList.add(figur);
-                        break;
-                    case "Text":
-                        Tekstskrevet = new Tekst(inputfratext, klikkmusx, klikkmusy, valgtstrekfarge,inputStrekbredde);
-                        tegnepane.getChildren().add(Tekstskrevet.getText());
-                        figur = null;
-                        break;
-                    default:
+            if (tegn == true){
+                if (e.getButton() == MouseButton.PRIMARY) {
+                    if (!breddegyldig()) {
                         return;
+                    }
+
+                    double inputStrekbredde = Double.parseDouble(strekbreddeinput.getText());
+                    klikkmusx = e.getX();
+                    klikkmusy = e.getY();
+                    Color valgtstrekfarge = strekfarge.getValue();
+                    Color valgtfillfarge = fillfarge.getValue();
+
+                    switch (ValgtFigur) {
+                        case "Rektangel":
+                            figur = new Rektangel(klikkmusx, klikkmusy, 0, 0, valgtstrekfarge, valgtfillfarge, inputStrekbredde);
+                            tegnepane.getChildren().add(figur.getShape());
+                            figur.musklikk(klikkmusx, klikkmusy);
+                            figurArrayList.add(figur);
+                            break;
+                        case "Sirkel":
+                            figur = new Sirkel(klikkmusx, klikkmusy, 0, valgtstrekfarge, valgtfillfarge, inputStrekbredde);
+                            tegnepane.getChildren().add(figur.getShape());
+                            figur.musklikk(klikkmusx, klikkmusy);
+                            figurArrayList.add(figur);
+                            break;
+                        case "Linje":
+                            figur = new Linje(klikkmusx, klikkmusy, klikkmusx, klikkmusy, valgtstrekfarge, inputStrekbredde);
+                            tegnepane.getChildren().add(figur.getShape());
+                            figur.musklikk(klikkmusx, klikkmusy);
+                            figurArrayList.add(figur);
+                            break;
+                        case "Text":
+                            Tekstskrevet = new Tekst(inputfratext, klikkmusx, klikkmusy, valgtstrekfarge,inputStrekbredde);
+                            tegnepane.getChildren().add(Tekstskrevet.getText());
+                            figur = null;
+                            break;
+                        default:
+                            ValgtFigur = "Rektangel";
+                            figur = new Rektangel(klikkmusx, klikkmusy, 0, 0, valgtstrekfarge, valgtfillfarge, inputStrekbredde);
+                            tegnepane.getChildren().add(figur.getShape());
+                            figur.musklikk(klikkmusx, klikkmusy);
+                            figurArrayList.add(figur);
+                            break;
+                    }
                 }
             }
         });
@@ -296,19 +344,32 @@ public class Main extends Application {
 
     private void dra(Pane tegnepane) {
         tegnepane.setOnMouseDragged(e -> {
-            if (!tegn){
-                return;
-            }
-            if (e.getButton() == MouseButton.PRIMARY) {
-                double musx = e.getX();
-                double musy = e.getY();
+            if (tegn == true){
+                if (e.getButton() == MouseButton.PRIMARY) {
+                    double musx = e.getX();
+                    double musy = e.getY();
 
-                if (figur != null) {
-                    figur.musdra(musx, musy);
-                } else if (Tekstskrevet != null) {
-                    Tekstskrevet.setPos(musx,musy);
+                    if (figur != null) {
+                        figur.musdra(musx, musy);
+                    } else if (Tekstskrevet != null) {
+                        Tekstskrevet.setPos(musx,musy);
+                    }
                 }
+
             }
+        });
+    }
+
+    private void lagrerelease(Pane tegnepane){
+        tegnepane.setOnMouseReleased(e ->{
+            if (tegn == true && figur != null){
+                isValid = figur.checkarea();
+            }
+            if(isValid){
+                tegnepane.getChildren().remove(figur.getShape());
+                figurArrayList.remove(figur);
+            }
+
         });
     }
 
@@ -327,12 +388,62 @@ public class Main extends Application {
 
                     if (figurloop.getShape().contains(mousex, mousey)) {
                         figur = figurloop;
-                        System.out.println(" "+figur.getDetails());
+                        if (figur.getShape() instanceof Line ){
+                            hboxedit3.setVisible(false);
+                        }else {
+                            hboxedit3.setVisible(true);
+                        }
+                        vboxeditvar.setVisible(true);
+                        figurvalgtedittext.setText(figur.getDetails());
+
                         break;
+                    } else if (!figurloop.getShape().contains(mousex, mousey)) {
+                        vboxeditvar.setVisible(false);
                     }
+
                 }
             }
         });
+        buttonslett.setOnAction(e2 -> {
+            tegnepane.getChildren().remove(figur.getShape());
+            figurArrayList.remove(figur);
+        });
+    }
+
+
+
+    private VBox editpane(){
+        vboxeditvar = new VBox();
+        stilUI(vboxeditvar);
+        hboxedit1 = new HBox();
+        hboxedit2 = new HBox();
+        hboxedit3 = new HBox();
+
+
+
+        hboxedit1.getChildren().addAll(Figurvalgtedit,figurvalgtedittext);
+        hboxedit2.getChildren().addAll(strekfargeny,fargegitt);
+        hboxedit3.getChildren().addAll(fillfargeny,fargeFill );
+        vboxeditvar.getChildren().addAll(hboxedit1,hboxedit2,hboxedit3,buttonslett);
+
+        hboxedit1.setPadding(new Insets(100,0,50,0));
+        hboxedit2.setPadding(new Insets(0,0,50,0));
+        hboxedit3.setPadding(new Insets(0,0,50,0));
+
+        styleButton(buttonslett);
+
+        vboxeditvar.setVisible(false);
+        return vboxeditvar;
+    }
+    private void styleButton(Button button) {
+        button.setStyle(
+                "-fx-background-color: #00796b;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-size: 14px;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-border-radius: 10;" +
+                        "-fx-padding: 10 20;"
+        );
     }
 
 

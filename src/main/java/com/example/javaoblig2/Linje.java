@@ -30,17 +30,7 @@ public class Linje extends Figur {
     public Shape getShape() {
         return linje;
     }
-    @Override
-    public String getDetails() {
-        double startX = linje.getStartX();
-        double startY = linje.getStartY();
-        double endX = linje.getEndX();
-        double endY = linje.getEndY();
 
-        double length = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
-
-        return "Lengde: " + String.format("%.2f", length);
-    }
 
 
     public void sluttpunkt(double startx, double starty, double endx, double endy) {
@@ -59,20 +49,25 @@ public class Linje extends Figur {
 
     @Override
     public void musdra(double x, double y) {
-        sluttpunkt(startx, starty, x, y);
+        endx = x;
+        endy = y;
+        sluttpunkt(startx, starty, endx, endy);
+    }
+
+    @Override
+    public boolean checkarea() {
+        double length = Math.sqrt(Math.pow(endx - startx, 2) + Math.pow(endy - starty, 2));
+        return length < 5;
+    }
+
+    @Override
+    public String getDetails() {
+
+        return "Linje";
     }
     @Override
-    public void move(double deltaX, double deltaY) {
-        startx += deltaX;
-        starty += deltaY;
-        endx += deltaX;
-        endy += deltaY;
-        linje.setStartX(startx);
-        linje.setStartY(starty);
-        linje.setEndX(endx);
-        linje.setEndY(endy);
-
-
+    public void setFill(Color nyfillfarge){
+        return;
     }
 
     @Override
