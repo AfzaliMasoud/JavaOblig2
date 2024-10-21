@@ -68,6 +68,9 @@ public class Main extends Application {
     double klikkmusx;
     double klikkmusy;
 
+    double diffx;
+    double diffy;
+
     double mousex;
     double mousey;
 
@@ -101,6 +104,8 @@ public class Main extends Application {
         dra(tegnepane);
         lagrerelease(tegnepane);
         flyttklikk(tegnepane);
+        draFigur(tegnepane);
+
 
 
         Scene scene = new Scene(hovedpane, 1500, 700);
@@ -400,6 +405,9 @@ public class Main extends Application {
                         vboxeditvar.setVisible(true);
                         figurvalgtedittext.setText(figur.getDetails());
 
+                        diffx  = mousex - figur.getShape().getLayoutX();
+                        diffy = mousey - figur.getShape().getLayoutY();
+
                         break;
                     } else if (!figurloop.getShape().contains(mousex, mousey)) {
                         vboxeditvar.setVisible(false);
@@ -430,6 +438,23 @@ public class Main extends Application {
 
     }
 
+
+
+    private void draFigur(Pane tegnepane) {
+        tegnepane.setOnMouseDragged(e -> {
+            if (tegn == false && figur != null) {
+                double musx = e.getX();
+                double musy = e.getY();
+                figurdra(musx, musy);
+            }
+        });
+    }
+    private void figurdra(double mouseX, double mouseY) {
+        if (figur != null) {
+            figur.getShape().setLayoutX(mouseX - diffx);
+            figur.getShape().setLayoutY(mouseY - diffy);
+        }
+    }
 
 
     private VBox editpane(){
