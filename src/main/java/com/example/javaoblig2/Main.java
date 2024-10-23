@@ -15,6 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import javafx.scene.Node;
+import org.w3c.dom.Text;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -41,8 +42,7 @@ public class Main extends Application {
     HBox hboxedit1;
     HBox hboxedit2;
     HBox hboxedit3;
-    Color nyStroke;
-    Color nyFill;
+
 
     Label Figurvalgtedit = new Label("Valgt Figur : ");
     TextField figurvalgtedittext = new TextField();
@@ -71,6 +71,9 @@ public class Main extends Application {
     double mousex;
     double mousey;
 
+    double forskjellx;
+    double forskjelly;
+
     boolean tegn = true;
     boolean isValid;
 
@@ -82,6 +85,8 @@ public class Main extends Application {
 
     ArrayList<Figur> figurArrayList = new ArrayList<>();
     ArrayList<Figur> tempArrayList = new ArrayList<>();
+
+    ArrayList<Tekst> figurTextlist = new ArrayList<>();
 
 
     @Override
@@ -205,7 +210,7 @@ public class Main extends Application {
         Button savefil = new Button("Lagre fil");
 
         savefil.setOnAction(e -> {
-            nyFil();
+
         });
 
         flyttebutton.setOnAction(e ->{
@@ -237,7 +242,7 @@ public class Main extends Application {
 
 
 
-    private void nyFil(){
+    private void nyFil() {
         int sikker = JOptionPane.showConfirmDialog(
                 null,
                 "Er du sikker at du vil lage en ny fil? Denne filen blir ikke lagret!",
@@ -245,15 +250,17 @@ public class Main extends Application {
                 JOptionPane.YES_NO_OPTION
         );
 
-        if(sikker == 0){
-            for (Figur figur : figurArrayList){
+        if (sikker == 0) {
+            for (Figur figur : figurArrayList) {
                 tegnepane.getChildren().remove(figur.getShape());
-
             }
+            for (Tekst tekst : figurTextlist) {
+                tegnepane.getChildren().remove(tekst.getText());
+            }
+            figurTextlist.clear();
             figurArrayList.clear();
-        }else{
+        } else {
             return;
-
         }
     }
 
@@ -265,6 +272,7 @@ public class Main extends Application {
         }else if (figurArrayList.isEmpty()){
            return;
         }
+
     }
     private void redomethod() {
         if (!tempArrayList.isEmpty()) {
@@ -280,8 +288,8 @@ public class Main extends Application {
     private boolean breddegyldig() {
         try {
             double inputStrekbredde = Double.parseDouble(strekbreddeinput.getText());
-            if (inputStrekbredde < 0 || inputStrekbredde > 20) {
-                JOptionPane.showMessageDialog(null, "Strek bredde må være mellom 0 og 20!");
+            if (inputStrekbredde < 0 || inputStrekbredde > 100) {
+                JOptionPane.showMessageDialog(null, "Strek bredde må være mellom 0 og 100!");
                 return false;
             }
             return true;
@@ -329,6 +337,7 @@ public class Main extends Application {
                         case "Text":
                             Tekstskrevet = new Tekst(inputfratext, klikkmusx, klikkmusy, valgtstrekfarge,inputStrekbredde);
                             tegnepane.getChildren().add(Tekstskrevet.getText());
+                            figurTextlist.add(Tekstskrevet);
                             figur = null;
                             break;
                         default:
@@ -400,6 +409,10 @@ public class Main extends Application {
                         vboxeditvar.setVisible(true);
                         figurvalgtedittext.setText(figur.getDetails());
 
+                        forskjellx = mousex - figur.getShape().getBoundsInParent().getMinX();
+                        forskjelly = mousey - figur.getShape().getBoundsInParent().getMinY();
+                        
+
                         break;
                     } else if (!figurloop.getShape().contains(mousex, mousey)) {
                         vboxeditvar.setVisible(false);
@@ -407,6 +420,10 @@ public class Main extends Application {
 
                 }
             }
+        });
+
+        tegnepane.setOnMouseDragged(e->{
+
         });
 
         fargegitt.setOnAction(event -> {
