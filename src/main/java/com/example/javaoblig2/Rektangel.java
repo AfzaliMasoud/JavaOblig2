@@ -17,25 +17,13 @@ public class Rektangel extends Figur {
 
 
     public Rektangel(double x, double y, double bredde, double høyde, Color strokeColor, Color fillColor, double strokeWidth) {
-        this.startX = x;
-        this.startY = y;
-        this.bredde = bredde;
-        this.høyde = høyde;
-        this.strokeColor = strokeColor;
-        this.fillColor = fillColor;
-        this.strokeWidth = strokeWidth;
         rektangel = new Rectangle(x, y, bredde, høyde);
         rektangel.setStroke(strokeColor);
         rektangel.setFill(fillColor);
         rektangel.setStrokeWidth(strokeWidth);
     }
-    public double getWidth() {
-        return rektangel.getWidth();
-    }
 
-    public double getHeight() {
-        return rektangel.getHeight();
-    }
+
 
     @Override
     public Shape getShape() {
@@ -87,12 +75,24 @@ public class Rektangel extends Figur {
 
         return area <= 10;
     }
-
-
+    @Override
+    public double getX(){
+        return startX + (rektangel.getWidth() / 2);
+    }
+    @Override
+    public double getY(){
+        return startY + (rektangel.getHeight() / 2);
+    }
 
     @Override
     public String getDetails() {
         return "Rektangel";
+    }
+    @Override
+    public void nylayout(double offsetX, double offsetY) {
+        startX += offsetX;
+        startY += offsetY;
+        setPosition(startX, startY);
     }
 
     @Override

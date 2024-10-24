@@ -15,7 +15,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import javafx.scene.Node;
-import org.w3c.dom.Text;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -29,6 +28,12 @@ public class Main extends Application {
     Image textbilde;
     Image undo;
     Image redo;
+    Image frembilde;
+    Image bakbilde;
+    Image øverstbilde;
+    Image bakerstbilde;
+
+
 
     Pane tegnepane;
     VBox vbox;
@@ -42,10 +47,18 @@ public class Main extends Application {
     HBox hboxedit1;
     HBox hboxedit2;
     HBox hboxedit3;
+    HBox hboxedit4;
+    HBox hboxedit5;
+    HBox hboxedit6;
 
+    Color nyStroke;
+    Color nyFill;
 
     Label Figurvalgtedit = new Label("Valgt Figur : ");
     TextField figurvalgtedittext = new TextField();
+
+    Label positionforfigurlabel = new Label("Position For Figur : ");
+    TextField positionforfigur = new TextField();
 
     Label strekfargeny = new Label("Strek Farge : ");
     ColorPicker fargegitt = new ColorPicker();
@@ -71,32 +84,29 @@ public class Main extends Application {
     double mousex;
     double mousey;
 
-    double forskjellx;
-    double forskjelly;
-
     boolean tegn = true;
     boolean isValid;
 
     String inputfratext;
-    Tekst Tekstskrevet;
     Button flyttebutton;
     Button tegnbutton;
+
 
 
     ArrayList<Figur> figurArrayList = new ArrayList<>();
     ArrayList<Figur> tempArrayList = new ArrayList<>();
 
-    ArrayList<Tekst> figurTextlist = new ArrayList<>();
-
 
     @Override
     public void start(Stage primaryStage) {
         figurvalgtedittext.setEditable(false);
+        positionforfigur.setEditable(false);
 
         hovedpane = new BorderPane();
         vboxedit = editpane();
         vbox = Valgpane();
         tegnepane = new Pane();
+
         hovedpane.setCenter(tegnepane);
         hovedpane.setLeft(vbox);
         hovedpane.setRight(vboxedit);
@@ -162,10 +172,10 @@ public class Main extends Application {
         textvalg.setGraphic(textview);
         textvalg.setOnAction(e -> {
             inputfratext = JOptionPane.showInputDialog("Hva vil du skrive?");
-            ValgtFigur = "Text";
+            ValgtFigur = "Tekst";
             tegn = true;
-            fillFargelabel.setVisible(false);
-            fillfarge.setVisible(false );
+            fillFargelabel.setVisible(true);
+            fillfarge.setVisible(true);
             vboxeditvar.setVisible(false);
         });
 
@@ -204,13 +214,13 @@ public class Main extends Application {
         Button Nyfil = new Button("Ny fil");
 
         Nyfil.setOnAction(e-> {
-           nyFil();
+            nyFil();
         });
 
         Button savefil = new Button("Lagre fil");
 
         savefil.setOnAction(e -> {
-
+            nyFil();
         });
 
         flyttebutton.setOnAction(e ->{
@@ -242,7 +252,7 @@ public class Main extends Application {
 
 
 
-    private void nyFil() {
+    private void nyFil(){
         int sikker = JOptionPane.showConfirmDialog(
                 null,
                 "Er du sikker at du vil lage en ny fil? Denne filen blir ikke lagret!",
@@ -250,17 +260,14 @@ public class Main extends Application {
                 JOptionPane.YES_NO_OPTION
         );
 
-        if (sikker == 0) {
-            for (Figur figur : figurArrayList) {
+        if(sikker == 0){
+            for (Figur figur : figurArrayList){
                 tegnepane.getChildren().remove(figur.getShape());
             }
-            for (Tekst tekst : figurTextlist) {
-                tegnepane.getChildren().remove(tekst.getText());
-            }
-            figurTextlist.clear();
             figurArrayList.clear();
-        } else {
+        }else{
             return;
+
         }
     }
 
@@ -270,9 +277,8 @@ public class Main extends Application {
             tempArrayList.add(sistefigur);
             tegnepane.getChildren().remove(sistefigur.getShape());
         }else if (figurArrayList.isEmpty()){
-           return;
+            return;
         }
-
     }
     private void redomethod() {
         if (!tempArrayList.isEmpty()) {
@@ -289,7 +295,7 @@ public class Main extends Application {
         try {
             double inputStrekbredde = Double.parseDouble(strekbreddeinput.getText());
             if (inputStrekbredde < 0 || inputStrekbredde > 100) {
-                JOptionPane.showMessageDialog(null, "Strek bredde må være mellom 0 og 100!");
+                JOptionPane.showMessageDialog(null, "Strek bredde må være mellom 0 og 20!");
                 return false;
             }
             return true;
@@ -298,7 +304,6 @@ public class Main extends Application {
             return false;
         }
     }
-
 
     private void klikk(Pane tegnepane) {
         tegnepane.setOnMousePressed(e -> {
@@ -318,42 +323,47 @@ public class Main extends Application {
                     switch (ValgtFigur) {
                         case "Rektangel":
                             figur = new Rektangel(klikkmusx, klikkmusy, 0, 0, valgtstrekfarge, valgtfillfarge, inputStrekbredde);
-                            tegnepane.getChildren().add(figur.getShape());
-                            figur.musklikk(klikkmusx, klikkmusy);
-                            figurArrayList.add(figur);
                             break;
                         case "Sirkel":
                             figur = new Sirkel(klikkmusx, klikkmusy, 0, valgtstrekfarge, valgtfillfarge, inputStrekbredde);
-                            tegnepane.getChildren().add(figur.getShape());
-                            figur.musklikk(klikkmusx, klikkmusy);
-                            figurArrayList.add(figur);
                             break;
                         case "Linje":
-                            figur = new Linje(klikkmusx, klikkmusy, klikkmusx, klikkmusy, valgtstrekfarge, inputStrekbredde);
-                            tegnepane.getChildren().add(figur.getShape());
-                            figur.musklikk(klikkmusx, klikkmusy);
-                            figurArrayList.add(figur);
+                            figur = new Linje(klikkmusx, klikkmusy, 0, 0, valgtstrekfarge, inputStrekbredde);
                             break;
-                        case "Text":
-                            Tekstskrevet = new Tekst(inputfratext, klikkmusx, klikkmusy, valgtstrekfarge,inputStrekbredde);
-                            tegnepane.getChildren().add(Tekstskrevet.getText());
-                            figurTextlist.add(Tekstskrevet);
-                            figur = null;
+                        case "Tekst":
+                            figur = new Tekst(inputfratext,klikkmusx,klikkmusy,valgtfillfarge,valgtstrekfarge,inputStrekbredde);
                             break;
                         default:
                             ValgtFigur = "Rektangel";
                             figur = new Rektangel(klikkmusx, klikkmusy, 0, 0, valgtstrekfarge, valgtfillfarge, inputStrekbredde);
-                            tegnepane.getChildren().add(figur.getShape());
-                            figur.musklikk(klikkmusx, klikkmusy);
-                            figurArrayList.add(figur);
                             break;
                     }
+
+                    tegnepane.getChildren().add(figur.getShape());
+                    figur.musklikk(klikkmusx, klikkmusy);
+                    figurArrayList.add(figur);
+
+                    figur.getShape().setOnMouseDragged(ev -> {
+                        double newMouseX = ev.getX();
+                        double newMouseY = ev.getY();
+
+                        double posx = figur.getX();
+                        double posy = figur.getY();
+
+                        double offsetX = newMouseX - mousex;
+                        double offsetY = newMouseY - mousey;
+
+                        figur.nylayout(offsetX, offsetY);
+
+                        positionforfigur.setText("X " + posx + " " + "Y " + posy);
+
+                        mousex = newMouseX;
+                        mousey = newMouseY;
+                    });
                 }
             }
         });
     }
-
-
     private void dra(Pane tegnepane) {
         tegnepane.setOnMouseDragged(e -> {
             if (tegn == true){
@@ -363,8 +373,6 @@ public class Main extends Application {
 
                     if (figur != null) {
                         figur.musdra(musx, musy);
-                    } else if (Tekstskrevet != null) {
-                        Tekstskrevet.setPos(musx,musy);
                     }
                 }
 
@@ -406,12 +414,9 @@ public class Main extends Application {
                         }else {
                             hboxedit3.setVisible(true);
                         }
+
                         vboxeditvar.setVisible(true);
                         figurvalgtedittext.setText(figur.getDetails());
-
-                        forskjellx = mousex - figur.getShape().getBoundsInParent().getMinX();
-                        forskjelly = mousey - figur.getShape().getBoundsInParent().getMinY();
-                        
 
                         break;
                     } else if (!figurloop.getShape().contains(mousex, mousey)) {
@@ -420,10 +425,6 @@ public class Main extends Application {
 
                 }
             }
-        });
-
-        tegnepane.setOnMouseDragged(e->{
-
         });
 
         fargegitt.setOnAction(event -> {
@@ -455,22 +456,118 @@ public class Main extends Application {
         hboxedit1 = new HBox();
         hboxedit2 = new HBox();
         hboxedit3 = new HBox();
+        hboxedit4 = new HBox();
+        hboxedit5 = new HBox();
+        hboxedit6 = new HBox();
+
+        frembilde = loadImage("Images/fram.png");
+        ImageView fremImageView = new ImageView(frembilde);
+        Button frem = new Button();
+        frem.setGraphic(fremImageView);
+        frem.setOnAction(e -> {
+            if (figur != null) {
+                bevegFigurForan(figur);
+            }
+        });
+
+
+        bakbilde = loadImage("Images/bak.png");
+        ImageView bakImageView = new ImageView(bakbilde);
+        Button bak = new Button();
+        bak.setGraphic(bakImageView);
+        bak.setOnAction(e -> {
+            if (figur != null) {
+                bevegFigurbak(figur);
+            }
+        });
+
+        øverstbilde = loadImage("Images/øverst.png");
+        ImageView øverstview = new ImageView(øverstbilde);
+        Button top = new Button();
+        top.setGraphic(øverstview);
+        top.setOnAction(e -> {
+            if (figur != null) {
+                bevegTiltop(figur);
+            }
+        });
+
+        bakerstbilde = loadImage("Images/bakerst.png");
+        ImageView bakerstview = new ImageView(bakerstbilde);
+        Button bakerst = new Button();
+        bakerst.setGraphic(bakerstview);
+        bakerst.setOnAction(e -> {
+            if (figur != null) {
+                bevegFigurbakerst(figur);
+            }
+        });
+
 
 
         hboxedit1.getChildren().addAll(Figurvalgtedit,figurvalgtedittext);
         hboxedit2.getChildren().addAll(strekfargeny,fargegitt);
         hboxedit3.getChildren().addAll(fillfargeny,fargeFill );
-        vboxeditvar.getChildren().addAll(hboxedit1,hboxedit2,hboxedit3,buttonslett);
+        hboxedit4.getChildren().addAll(positionforfigurlabel,positionforfigur);
+        hboxedit5.getChildren().addAll(bak,frem);
+        hboxedit6.getChildren().addAll(bakerst,top);
+        vboxeditvar.getChildren().addAll(hboxedit1,hboxedit4,hboxedit2,hboxedit3,hboxedit5,hboxedit6,buttonslett);
 
-        hboxedit1.setPadding(new Insets(100,0,50,0));
-        hboxedit2.setPadding(new Insets(0,0,50,0));
-        hboxedit3.setPadding(new Insets(0,0,50,0));
+        hboxedit1.setPadding(new Insets(100,0,40,0));
+        hboxedit2.setPadding(new Insets(0,0,40,0));
+        hboxedit3.setPadding(new Insets(0,0,40,0));
+        hboxedit4.setPadding(new Insets(0,0,40,0));
+
+        hboxedit5.setSpacing(15);
+        hboxedit5.setPadding(new Insets(0,0,20,0));
+
+        hboxedit6.setSpacing(15);
+        hboxedit6.setPadding(new Insets(0,0,40,0));
 
         styleButton(buttonslett);
 
         vboxeditvar.setVisible(false);
         return vboxeditvar;
     }
+
+    private void bevegFigurForan(Figur figur) {
+        int index = figurArrayList.indexOf(figur);
+        if (index < figurArrayList.size() - 1) {
+            figurArrayList.remove(index);
+            figurArrayList.add(index + 1, figur);
+            nypaneoppdatering();
+        }
+    }
+
+    private void bevegFigurbak(Figur figur) {
+        int index = figurArrayList.indexOf(figur);
+        if (index > 0) {
+            figurArrayList.remove(index);
+            figurArrayList.add(index - 1, figur);
+            nypaneoppdatering();
+        }
+    }
+
+    private void bevegTiltop(Figur figur) {
+
+        figurArrayList.remove(figur);
+        figurArrayList.add(figur);
+        nypaneoppdatering();
+    }
+
+    private void bevegFigurbakerst(Figur figur) {
+        figurArrayList.remove(figur);
+        figurArrayList.add(0, figur);
+        nypaneoppdatering();
+    }
+
+
+    private void nypaneoppdatering() {
+        tegnepane.getChildren().clear();
+        for (Figur figur : figurArrayList) {
+            tegnepane.getChildren().add(figur.getShape());
+        }
+    }
+
+
     private void styleButton(Button button) {
         button.setStyle(
                 "-fx-background-color: #00796b;" +

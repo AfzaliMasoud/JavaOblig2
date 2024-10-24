@@ -12,6 +12,8 @@ public abstract class Figur {
     public abstract boolean checkarea();
     public abstract void setFill(Color nyfillfarge);
     public abstract void setStroke(Color nystrokefarge);
-
+    public abstract void nylayout(double offsetX, double offsetY);
+    public abstract double getX();
+    public abstract double getY();
 
 }

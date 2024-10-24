@@ -17,12 +17,6 @@ public class Sirkel extends Figur {
     double radius;
 
     public Sirkel(double startX, double startY, double radius, Color strokeColor, Color fillColor, double strokeWidth) {
-        this.startX = startX;
-        this.startY = startY;
-        this.strokeColor = strokeColor;
-        this.fillColor = fillColor;
-        this.strokeWidth = strokeWidth;
-
         sirkel = new javafx.scene.shape.Circle(startX, startY, radius);
         sirkel.setStroke(strokeColor);
         sirkel.setFill(fillColor);
@@ -79,7 +73,20 @@ public class Sirkel extends Figur {
         sirkel.setStroke(nyfillfarge);
     }
 
-
+    @Override
+    public void nylayout(double offsetX, double offsetY) {
+        startX += offsetX;
+        startY += offsetY;
+        setCenter(startX, startY);
+    }
+    @Override
+    public double getX() {
+        return sirkel.getCenterX();
+    }
+    @Override
+    public double getY(){
+        return sirkel.getCenterY();
+    }
 
     @Override
     public String toString() {
