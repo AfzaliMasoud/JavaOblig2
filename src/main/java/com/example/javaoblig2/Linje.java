@@ -24,8 +24,6 @@ public class Linje extends Figur {
         return linje;
     }
 
-
-
     public void sluttpunkt(double startx, double starty, double endx, double endy) {
         linje.setStartX(startx);
         linje.setStartY(starty);
@@ -85,6 +83,11 @@ public class Linje extends Figur {
     @Override
     public double getY(){
         return (starty + endy) / 2;
+    }
+
+    @Override
+    public void setNyStrokeBredde(double inx){
+        linje.setStrokeWidth(inx);
     }
 
     @Override

@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import javafx.scene.Node;
 
 import javax.swing.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 
@@ -50,6 +51,7 @@ public class Main extends Application {
     HBox hboxedit4;
     HBox hboxedit5;
     HBox hboxedit6;
+    HBox hboxedit7;
 
     Color nyStroke;
     Color nyFill;
@@ -65,6 +67,9 @@ public class Main extends Application {
 
     Label fillfargeny = new Label("Fill Farge : ");
     ColorPicker fargeFill = new ColorPicker();
+
+    Label strokewidthtext = new Label("Ny linje/Stroke bredde : ");
+    TextField nyStrokeWidth = new TextField();
 
     Button buttonslett = new Button("Slett Figur");
 
@@ -295,7 +300,7 @@ public class Main extends Application {
         try {
             double inputStrekbredde = Double.parseDouble(strekbreddeinput.getText());
             if (inputStrekbredde < 0 || inputStrekbredde > 100) {
-                JOptionPane.showMessageDialog(null, "Strek bredde må være mellom 0 og 20!");
+                JOptionPane.showMessageDialog(null, "Strek bredde må være mellom 0 og 100!");
                 return false;
             }
             return true;
@@ -441,10 +446,26 @@ public class Main extends Application {
             }
         });
 
+        nyStrokeWidth.setOnAction(e->{
+            try {
+                double nystroke = Double.parseDouble(nyStrokeWidth.getText());
+                if (nystroke > 0 && nystroke <= 100) {
+                    figur.setNyStrokeBredde(nystroke);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Du må gi et tall mellom 0 og 100");
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "Det må være tall bro");
+            }
+        });
+
+
         buttonslett.setOnAction(e2 -> {
             tegnepane.getChildren().remove(figur.getShape());
             figurArrayList.remove(figur);
         });
+
+
 
     }
 
@@ -459,6 +480,7 @@ public class Main extends Application {
         hboxedit4 = new HBox();
         hboxedit5 = new HBox();
         hboxedit6 = new HBox();
+        hboxedit7 = new HBox();
 
         frembilde = loadImage("Images/fram.png");
         ImageView fremImageView = new ImageView(frembilde);
@@ -509,12 +531,14 @@ public class Main extends Application {
         hboxedit4.getChildren().addAll(positionforfigurlabel,positionforfigur);
         hboxedit5.getChildren().addAll(bak,frem);
         hboxedit6.getChildren().addAll(bakerst,top);
-        vboxeditvar.getChildren().addAll(hboxedit1,hboxedit4,hboxedit2,hboxedit3,hboxedit5,hboxedit6,buttonslett);
+        hboxedit7.getChildren().addAll(strokewidthtext,nyStrokeWidth);
+        vboxeditvar.getChildren().addAll(hboxedit1,hboxedit4,hboxedit7,hboxedit2,hboxedit3,hboxedit5,hboxedit6,buttonslett);
 
-        hboxedit1.setPadding(new Insets(100,0,40,0));
-        hboxedit2.setPadding(new Insets(0,0,40,0));
-        hboxedit3.setPadding(new Insets(0,0,40,0));
-        hboxedit4.setPadding(new Insets(0,0,40,0));
+        hboxedit1.setPadding(new Insets(70, 0, 30, 0));
+        hboxedit2.setPadding(new Insets(0, 0, 30, 0));
+        hboxedit3.setPadding(new Insets(0, 0, 30, 0));
+        hboxedit4.setPadding(new Insets(0, 0, 30, 0));
+        hboxedit7.setPadding(new Insets(0, 0, 30, 0));
 
         hboxedit5.setSpacing(15);
         hboxedit5.setPadding(new Insets(0,0,20,0));
@@ -527,6 +551,7 @@ public class Main extends Application {
         vboxeditvar.setVisible(false);
         return vboxeditvar;
     }
+
 
     private void bevegFigurForan(Figur figur) {
         int index = figurArrayList.indexOf(figur);

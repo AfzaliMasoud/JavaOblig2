@@ -4,6 +4,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
+
 public class Rektangel extends Figur {
 
     private Rectangle rektangel;
@@ -14,6 +15,7 @@ public class Rektangel extends Figur {
     private Color strokeColor;
     private Color fillColor;
     private double strokeWidth;
+
 
 
     public Rektangel(double x, double y, double bredde, double høyde, Color strokeColor, Color fillColor, double strokeWidth) {
@@ -93,6 +95,10 @@ public class Rektangel extends Figur {
         startX += offsetX;
         startY += offsetY;
         setPosition(startX, startY);
+    }
+    @Override
+    public void setNyStrokeBredde(double inx){
+        rektangel.setStrokeWidth(inx);
     }
 
     @Override

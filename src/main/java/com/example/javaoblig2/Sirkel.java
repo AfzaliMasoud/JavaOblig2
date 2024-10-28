@@ -89,6 +89,11 @@ public class Sirkel extends Figur {
     }
 
     @Override
+    public void setNyStrokeBredde(double inx){
+        sirkel.setStrokeWidth(inx);
+    }
+
+    @Override
     public String toString() {
         return "Sirkel: [StartX: " + startX +
                 ", StartY: " + startY +

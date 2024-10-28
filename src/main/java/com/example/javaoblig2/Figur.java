@@ -15,5 +15,7 @@ public abstract class Figur {
     public abstract void nylayout(double offsetX, double offsetY);
     public abstract double getX();
     public abstract double getY();
+    public abstract void setNyStrokeBredde(double inx);
+
 
 }

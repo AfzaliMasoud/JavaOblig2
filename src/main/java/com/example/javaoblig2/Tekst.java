@@ -16,6 +16,7 @@ public class Tekst extends Figur{
         tekst.setFont(Font.font("Times New Roman",pixel));
     }
 
+
     @Override
     public Shape getShape() {
         return tekst;
@@ -49,22 +50,30 @@ public class Tekst extends Figur{
         tekst.setY(y);
 
     }
+
     @Override
     public String getDetails() {
         return "Tekst: " + tekst.getText();
     }
+
     @Override
     public void nylayout(double offsetX, double offsetY) {
         tekst.setX(tekst.getX() + offsetX);
         tekst.setY(tekst.getY() + offsetY);
     }
+
     @Override
     public double getX() {
         return tekst.getX() + tekst.getLayoutBounds().getWidth() / 2;
     }
+
     @Override
     public double getY() {
         return tekst.getY() + tekst.getLayoutBounds().getHeight() / 2;
+    }
+    @Override
+    public void setNyStrokeBredde(double inx) {
+        tekst.setFont(Font.font(inx));
     }
 
 }
